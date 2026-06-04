@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Soil Type Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 550px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 15px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e8f5e9;
+      border-left: 5px solid #4CAF50;
+      font-size: 17px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Soil Type Calculator</h2>
+
+    <label>Sand height in mm:</label>
+    <input type="number" id="sand" placeholder="Example: 25">
+
+    <label>Silt height in mm:</label>
+    <input type="number" id="silt" placeholder="Example: 15">
+
+    <label>Clay height in mm:</label>
+    <input type="number" id="clay" placeholder="Example: 10">
+
+    <button onclick="calculateSoil()">Calculate Soil Type</button>
+
+    <div id="result" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    function calculateSoil() {
+      let sand = parseFloat(document.getElementById("sand").value);
+      let silt = parseFloat(document.getElementById("silt").value);
+      let clay = parseFloat(document.getElementById("clay").value);
+
+      if (isNaN(sand) || isNaN(silt) || isNaN(clay) || sand < 0 || silt < 0 || clay < 0) {
+        alert("Please enter valid positive numbers.");
+        return;
+      }
+
+      let total = sand + silt + clay;
+
+      if (total === 0) {
+        alert("Total height cannot be zero.");
+        return;
+      }
+
+      let sandPercent = (sand / total) * 100;
+      let siltPercent = (silt / total) * 100;
+      let clayPercent = (clay / total) * 100;
+
+      let soilType = getSoilType(sandPercent, siltPercent, clayPercent);
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML =
+        "<strong>Total height:</strong> " + total.toFixed(1) + " mm<br>" +
+        "<strong>Sand:</strong> " + sandPercent.toFixed(1) + "%<br>" +
+        "<strong>Silt:</strong> " + siltPercent.toFixed(1) + "%<br>" +
+        "<strong>Clay:</strong> " + clayPercent.toFixed(1) + "%<br><br>" +
+        "<strong>Soil Type:</strong> " + soilType;
+    }
+
+    function getSoilType(sand, silt, clay) {
+      if (clay >= 40 && silt >= 40) {
+        return "Silty Clay";
+      } 
+      else if (clay >= 40 && sand >= 45) {
+        return "Sandy Clay";
+      } 
+      else if (clay >= 40) {
+        return "Clay";
+      } 
+      else if (clay >= 27 && clay < 40 && sand <= 20) {
+        return "Silty Clay Loam";
+      } 
+      else if (clay >= 27 && clay < 40 && sand > 45) {
+        return "Sandy Clay Loam";
+      } 
+      else if (clay >= 27 && clay < 40) {
+        return "Clay Loam";
+      } 
+      else if (clay >= 20 && clay < 27 && silt >= 40) {
+        return "Silt Loam";
+      } 
+      else if (clay >= 7 && clay < 27 && sand >= 28 && sand <= 52 && silt >= 28 && silt < 50) {
+        return "Loam";
+      } 
+      else if (silt >= 80 && clay < 12) {
+        return "Silt";
+      } 
+      else if (silt >= 50 && clay < 27) {
+        return "Silt Loam";
+      } 
+      else if (sand >= 85 && clay < 10 && silt < 15) {
+        return "Sand";
+      } 
+      else if (sand >= 70 && clay < 15) {
+        return "Loamy Sand";
+      } 
+      else if (sand >= 43 && sand < 85 && clay < 20) {
+        return "Sandy Loam";
+      } 
+      else {
+        return "Loam";
+      }
+    }
+  </script>
+
+</body>
+</html>
